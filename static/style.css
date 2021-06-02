@@ -1,0 +1,24 @@
+section {
+  margin-bottom: 2rem; 
+}
+
+.gloss {
+  background-color: azure !important;
+  /* setting the color correctly in print is tough, let's make that a TODO */
+  /* https://stackoverflow.com/questions/32950554/css-color-property-not-working-correctly-on-media-print */
+}
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0px;
+  background-color: white !important;
+  box-sizing: border-box !important;
+  border-right: 2px solid black !important;
+}
+
+@media print {
+  #main-container {
+    margin: 5% !important;
+  }
+}
