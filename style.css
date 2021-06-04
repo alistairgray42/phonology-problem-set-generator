@@ -16,9 +16,3 @@ section {
   box-sizing: border-box !important;
   border-right: 2px solid black !important;
 }
-
-@media print {
-  #main-container {
-    margin: 5% !important;
-  }
-}
