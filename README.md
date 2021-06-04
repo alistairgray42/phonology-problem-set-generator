@@ -4,7 +4,7 @@ This static website allows easy creation of phonology problem sets.
 
 Instructions: (same as those on the website itself)
 
-1. (Optional) Give the problem set a title and description.
+1. (Optional) Give the problem set a title and (GitHub Flavored Markdown) description.
 2. Upload a dataset in CSV format.
 3. (Optional) Upload a set of features in CSV format; if no feature set is uploaded, the default one displayed will be used. (The default feature set is taken from [Featurize!](http://www.phonology.us/featurize) by George Steel and Peter Jurgec, and other feature sets should follow the same pattern.)
 4. Use the checkboxes to select which entries to include; you can choose to include or exclude specific entries, as well as those including specific phonemes or phonemes with specific features. Use < Tab > and < Alt-Tab > to walk through checkboxes.

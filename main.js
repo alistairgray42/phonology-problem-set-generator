@@ -1,3 +1,6 @@
+const converter = new showdown.Converter({'simpleLineBreaks' : 'true', 'headerLevelStart' : 2});
+converter.setFlavor('github');
+
 let dataset = null;
 let featurearray = null;
 
@@ -151,7 +154,8 @@ let populateFeatures = (evt) => {
 
 let updateTitleAndDescription = (evt) => {
     $("#printonly-title").html(title.val());
-    $("#printonly-description").html(description.val());
+    let parsed = converter.makeHtml(description.val());
+    $("#printonly-description").html(parsed);
 }
 
 let updatePrintTable = (evt) => {
