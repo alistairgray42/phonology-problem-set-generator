@@ -38,7 +38,7 @@
                     <li>Use the checkboxes to select which entries to include; you can choose to include or exclude
                         specific entries, as well as those including specific phonemes or phonemes with specific
                         features. Use &lt;Tab&gt; and &lt;Alt-Tab&gt; to walk through checkboxes.</li>
-                    <li>Print using your browser's print functionality; only the title, description, and the data you
+                    <li>Print using your browser's print functionality or the button below; only the title, description, and the data you
                         choose to include will be printed. Your browser should allow you to print to PDF if you would
                         like electronic copies. Entries will be automatically numbered.</li>
                     <li>Changes you make will be reflected immediately.</li>
@@ -52,7 +52,7 @@
                             style="width:100%;" placeholder="Description"></textarea>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="btn btn-primary" for="dataset-selector">
                                 <input id="dataset-selector" type="file" style="display:none"
                                     onchange="$('#dataset-info').text(this.files[0].name)">
@@ -61,7 +61,7 @@
                             <span class='label label-info' id="dataset-info"></span>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="btn btn-primary" for="featureset-selector">
                                 <input id="featureset-selector" type="file" style="display:none"
                                     onchange="$('#featureset-info').text(this.files[0].name)">
@@ -69,6 +69,12 @@
                             </label>
                             <span class='label label-info' id="featureset-info"></span>
                         </div>
+
+                        <div class="col-md-4">
+                            <button id="print-button" type="button" class="btn btn-primary"
+                                    onclick="window.print()">Print...</button>
+                        </div>
+
                     </div>
                 </div>
             </section>
