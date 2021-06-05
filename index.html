@@ -32,13 +32,14 @@
                     Instructions:
                 <ol>
                     <li>(Optional) Give the problem set a title and (GitHub Flavored Markdown) description.</li>
-                    <li>Upload a dataset in CSV format.</li>
+                    <li>Upload a dataset in CSV format, or choose one from the dropdown list.</li>
                     <li>(Optional) Upload a set of features in CSV format; if no feature set is uploaded, the default
                         one displayed will be used.</li>
                     <li>Use the checkboxes to select which entries to include; you can choose to include or exclude
                         specific entries, as well as those including specific phonemes or phonemes with specific
                         features. Use &lt;Tab&gt; and &lt;Alt-Tab&gt; to walk through checkboxes.</li>
-                    <li>Print using your browser's print functionality or the button below; only the title, description, and the data you
+                    <li>Print using your browser's print functionality or the button below; only the title, description,
+                        and the data you
                         choose to include will be printed. Your browser should allow you to print to PDF if you would
                         like electronic copies. Entries will be automatically numbered.</li>
                     <li>Changes you make will be reflected immediately.</li>
@@ -48,16 +49,25 @@
                 <div class="container">
                     <div class="row">
                         <input type="text" class="form-control" id="title" placeholder="Title">
-                        <textarea name="Description" class="form-control mt-3" id="description" rows="3"
+                        <textarea name="Description" class="form-control mt-3" id="description" rows="4"
                             style="width:100%;" placeholder="Description"></textarea>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
-                            <label class="btn btn-primary" for="dataset-selector">
-                                <input id="dataset-selector" type="file" style="display:none"
-                                    onchange="$('#dataset-info').text(this.files[0].name)">
-                                Upload dataset...
-                            </label>
+                            <div class="btn-group">
+                                <label class="btn btn-primary" for="dataset-selector">
+                                    <input id="dataset-selector" type="file" style="display:none"
+                                        onchange="$('#dataset-info').text(this.files[0].name)">
+                                    Upload dataset...
+                                </label>
+                    
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+
+                                <div class="dropdown-menu container px-4" id="builtin-datasets"></div>
+                            </div>
                             <span class='label label-info' id="dataset-info"></span>
                         </div>
 
@@ -72,7 +82,7 @@
 
                         <div class="col-md-4">
                             <button id="print-button" type="button" class="btn btn-primary"
-                                    onclick="window.print()">Print...</button>
+                                nclick="window.print()">Print...</button>
                         </div>
 
                     </div>
@@ -130,11 +140,14 @@
 
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="scripts/jquery.csv.js"></script>
     <script src="scripts/showdown.js"></script>
     <script src="default_features.js"></script>

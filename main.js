@@ -1,6 +1,17 @@
 const converter = new showdown.Converter({'simpleLineBreaks' : 'true', 'headerLevelStart' : 2});
 converter.setFlavor('github');
 
+// seems like a hack
+const default_datasets = ["AncientGreekIPA", "Catalan2IPA", "Catalan",
+    "CatalanIPA", "EnglishIPA", "EstonianIPA", "Farsi2IPA", "Finnish2IPA",
+    "Finnish", "FinnishIPA", "GreekIPA", "GreekIPA-glossed", "GreekIPA-pal",
+    "HungarianIPA", "JapaneseIPA", "KenyangIPA", "KikuriaIPA", "KipsigisIPA",
+    "Korean2IPA", "Korean3IPA", "Lamba", "MakondeIPA", "MixtecIPA",
+    "NorthernSamiIPA", "Polish2IPA", "Polish", "SerboCroatianIPA", "ShonaIPA",
+    "Somali", "SpanishIPA", "Turkish", "TurkishPS1", "TurkishPS2", "UkrainianIPA",
+    "XavanteIPA", "Yidiny2IPA", "YidinyIPA"
+];
+
 let dataset = null;
 let featurearray = null;
 
@@ -19,8 +30,19 @@ function isGloss(str) {
     return str.includes("GLOSS") || str.includes("LEXEME")
 }
 
-let populateData = (evt) => {
-    dataset = $.csv.toArrays(evt.target.result);
+function loadBuiltin(name) {
+    $.ajax({
+        "url" : `datasets/${name}.csv`,
+        "success" : (res) => 
+        {
+            populateData(res);
+            $("#dataset-info").text(`${name}.csv`);
+        }
+    });
+}
+
+let populateData = (input) => {
+    dataset = $.csv.toArrays(input);
     let numRows = dataset.length;
     let numCols = dataset[0].length;
 
@@ -152,6 +174,31 @@ let populateFeatures = (evt) => {
     }
 }
 
+function populateDefaultDatasets() {
+    let count = 0;
+    let html = "";
+
+    const classes = `class="col-md-3 m-1 btn btn-outline-primary builtins-cell"`
+    for (let dataset of default_datasets) {
+        if (count == 0)
+            html += `<div class="row m-1 builtins-row">\n`;
+
+        html += `<a ${classes} id="${dataset}-data">${dataset}</a>\n`;
+
+        if (count == 3)
+            html += `</div>\n`;
+        count = (count + 1) % 4;
+    }
+    if (count != 0)
+        html += `</div>\n`;
+
+    $("#builtin-datasets").html(html);
+
+    for (let dataset of default_datasets) {
+        $(`#${dataset}-data`).click(() => loadBuiltin(dataset));
+    }
+}
+
 let updateTitleAndDescription = (evt) => {
     $("#printonly-title").html(title.val());
     let parsed = converter.makeHtml(description.val());
@@ -272,6 +319,8 @@ $(document).ready(() => {
     featureset = $.csv.toArrays(default_features);
     populateFeatures(null);
 
+    populateDefaultDatasets();
+
     // Set up listeners
     title.change(updateTitleAndDescription);
     description.change(updateTitleAndDescription);
@@ -284,7 +333,7 @@ $(document).ready(() => {
         if (file) {
             let reader = new FileReader();
             reader.readAsText(file, "UTF-8");
-            reader.onload = populateData;
+            reader.onload = (evt) => populateData(evt.target.result);
             reader.onerror = function (evt) { /* TODO */ }
         }
     });

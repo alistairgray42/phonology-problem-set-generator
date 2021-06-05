@@ -16,3 +16,23 @@ section {
   box-sizing: border-box !important;
   border-right: 2px solid black !important;
 }
+
+#builtin-datasets {
+  min-width: 500%;
+}
+
+.builtins-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.builtins-cell{
+  width: 20% !important;
+}
+
+@media print {
+  #main-container {
+    margin: 0%;
+  }
+}
