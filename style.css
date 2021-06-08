@@ -17,6 +17,10 @@ section {
   border-right: 2px solid black !important;
 }
 
+.dropdown-toggle {
+  margin-left: 1px !important;
+}
+
 #builtin-datasets {
   min-width: 500%;
 }
