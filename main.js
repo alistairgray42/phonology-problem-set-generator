@@ -59,7 +59,8 @@ let populateData = (input) => {
         if (isGloss(dataset[0][col]))
             cellClass += ` class="gloss"`
 
-        html += `<th${cellClass}>${dataset[0][col]}</th>\n`
+        html += `<th${cellClass} id="cell-0-${col}"
+            contenteditable=true>${dataset[0][col]}</th>\n`
     }
 
     html += "</tr>\n</thead>\n<tbody>\n";
@@ -74,7 +75,8 @@ let populateData = (input) => {
         if (isGloss(dataset[0][col]))
             cellClass += ` class="gloss"`
 
-        html += `<td${cellClass}><input type="checkbox" class="form-check-input" checked id="include-col-${col + 1}"></td>\n`
+        html += `<td${cellClass}><input type="checkbox" class="form-check-input"
+            checked id="include-col-${col + 1}"></td>\n`
     }
 
     html += "</tr>\n";
@@ -82,7 +84,8 @@ let populateData = (input) => {
     for(let i = 1; i < numRows; i++)
     {
         html += "<tr>\n";
-        html += `<td class=\"sticky\"><input type="checkbox" class="form-check-input" checked id="include-row-${i}"></td>\n`
+        html += `<td class=\"sticky\"><input type="checkbox"
+            class="form-check-input" checked id="include-row-${i}"></td>\n`
 
         for (let j = 0; j < numCols; j++)
         {
@@ -91,7 +94,8 @@ let populateData = (input) => {
             if (isGloss(dataset[0][j]))
                 cellClass += ` class="gloss"`
 
-            html += `<td${cellClass}>${dataset[i][j]}</td>\n`
+            html += `<td${cellClass} id="cell-${i}-${j}"
+                contenteditable=true>${dataset[i][j]}</td>\n`
         }
         html += "</tr>\n";
     }
@@ -100,14 +104,6 @@ let populateData = (input) => {
     $("#select-control-buttons").show();
     $("#table-nothing-yet").hide();
     dataset_table.html(html);
-
-    // set checkbox listeners
-    for (let i = 1; i < numRows; i++)
-        $(`#include-row-${i}`).change(updatePrintTable);
-    for (let i = 1; i <= numCols; i++)
-        $(`#include-col-${i}`).change(updatePrintTable);
-
-    updatePrintTable();
 }
 
 let populateFeatures = (evt) => {
@@ -243,9 +239,9 @@ let updatePrintTable = (evt) => {
                 cellClass = " class=\"gloss\""
 
             if (i == 0)
-                html += `<th${cellClass}>${dataset[i][j]}</th>\n`
+                html += `<th${cellClass}>${$(`#cell-${i}-${j}`).text()}</th>\n`
             else
-                html += `<td${cellClass}>${dataset[i][j]}</td>\n`
+                html += `<td${cellClass}>${$(`#cell-${i}-${j}`).text()}</td>\n`
         }
         html += "</tr>\n";
 
@@ -268,8 +264,6 @@ let massSelect = (which, dimension) => {
 
     for (let i = 1; i < dataset.length; i++)
         $(`#include-${dimension}-${i}`).prop('checked', which);
-
-    updatePrintTable();
 }
 
 /* 
@@ -306,8 +300,6 @@ let massSelectMatching = (select, value, feature) => {
                 $(`#include-row-${i}`).prop('checked', select);
             }});
     }
-
-    updatePrintTable();
 
     return null;
 }
@@ -361,6 +353,8 @@ $(document).ready(() => {
     $("#select-no-rows").click(() => massSelect(false, "row"));
     $("#select-all-cols").click(() => massSelect(true, "col"));
     $("#select-no-cols").click(() => massSelect(false, "col"));
+
+    window.onbeforeprint = updatePrintTable;
 
     updateTitleAndDescription();
     updatePrintTable();
