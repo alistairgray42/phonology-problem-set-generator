@@ -315,9 +315,15 @@ let massSelectMatching = (select, value, feature) => {
 $(document).ready(() => {
     $("#select-control-buttons").hide();
 
-    // default features
-    featureset = $.csv.toArrays(default_features);
-    populateFeatures(null);
+    $.ajax({
+        "url" : `featuresets/default.csv`,
+        "success" : (res) => 
+        {
+            // default features
+            featureset = $.csv.toArrays(res);
+            populateFeatures(null);
+        }
+    });
 
     populateDefaultDatasets();
 
