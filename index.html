@@ -60,9 +60,9 @@
                                         onchange="$('#dataset-info').text(this.files[0].name)">
                                     Upload dataset...
                                 </label>
-                    
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="visually-hidden">Toggle Dropdown</span>
                                 </button>
 
@@ -72,11 +72,23 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="btn btn-primary" for="featureset-selector">
-                                <input id="featureset-selector" type="file" style="display:none"
-                                    onchange="$('#featureset-info').text(this.files[0].name)">
-                                Upload feature set...
-                            </label>
+                            <div class="btn-group">
+                                <label class="btn btn-primary" for="featureset-selector">
+                                    <!--
+                                    <input id="featureset-selector" type="file" style="display:none"
+                                        onchange="$('#featureset-info').text(this.files[0].name)">
+                                    -->
+                                    <input id="featureset-selector" type="file" style="display:none">
+                                    Upload feature set...
+                                </label>
+
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+
+                                <div class="dropdown-menu container px-4" id="builtin-featuresets"></div>
+                            </div>
                             <span class='label label-info' id="featureset-info"></span>
                         </div>
 

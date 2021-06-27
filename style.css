@@ -25,6 +25,10 @@ section {
   min-width: 500%;
 }
 
+#builtin-featuresets {
+  min-width: 300%;
+}
+
 .builtins-row{
   display: flex;
   flex-direction: row;

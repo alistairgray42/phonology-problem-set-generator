@@ -1,7 +1,7 @@
-const converter = new showdown.Converter({'simpleLineBreaks' : 'true', 'headerLevelStart' : 2});
-converter.setFlavor('github');
+// To add default datasets or feature sets: make sure that the dataset or
+// featureset is in the appropriate directory, then add the filename (minus the
+// .csv extension; spaces aren't allowed) to the appropriate list below
 
-// seems like a hack
 const default_datasets = ["AncientGreekIPA", "Catalan2IPA", "Catalan",
     "CatalanIPA", "EnglishIPA", "EstonianIPA", "Farsi2IPA", "Finnish2IPA",
     "Finnish", "FinnishIPA", "GreekIPA", "GreekIPA-glossed", "GreekIPA-pal",
@@ -11,6 +11,11 @@ const default_datasets = ["AncientGreekIPA", "Catalan2IPA", "Catalan",
     "Somali", "SpanishIPA", "Turkish", "TurkishPS1", "TurkishPS2", "UkrainianIPA",
     "XavanteIPA", "Yidiny2IPA", "YidinyIPA"
 ];
+
+const default_featuresets = ["default"]
+
+const converter = new showdown.Converter({ 'simpleLineBreaks': 'true', 'headerLevelStart': 2 });
+converter.setFlavor('github');
 
 let dataset = null;
 let featurearray = null;
@@ -32,11 +37,20 @@ function isGloss(str) {
 
 function loadBuiltin(name) {
     $.ajax({
-        "url" : `datasets/${name}.csv`,
-        "success" : (res) => 
-        {
+        "url": `datasets/${name}.csv`,
+        "success": (res) => {
             populateData(res);
             $("#dataset-info").text(`${name}.csv`);
+        }
+    });
+}
+
+function loadFeatures(name) {
+    $.ajax({
+        "url": `featuresets/${name}.csv`,
+        "success": (res) => {
+            populateFeatures(res);
+            $("#featureset-info").text(`${name}.csv`);
         }
     });
 }
@@ -81,14 +95,12 @@ let populateData = (input) => {
 
     html += "</tr>\n";
 
-    for(let i = 1; i < numRows; i++)
-    {
+    for (let i = 1; i < numRows; i++) {
         html += "<tr>\n";
         html += `<td class=\"sticky\"><input type="checkbox"
             class="form-check-input" checked id="include-row-${i}"></td>\n`
 
-        for (let j = 0; j < numCols; j++)
-        {
+        for (let j = 0; j < numCols; j++) {
             let cellClass = "";
 
             if (isGloss(dataset[0][j]))
@@ -106,18 +118,17 @@ let populateData = (input) => {
     dataset_table.html(html);
 }
 
-let populateFeatures = (evt) => {
+let populateFeatures = (input) => {
     // pass in null to populate if you've already set `featureset`
-    if (evt)
-        featureset = $.csv.toArrays(evt.target.result);
+    if (input)
+        featureset = $.csv.toArrays(input);
     let numRows = featureset.length;
     let numCols = featureset[0].length;
 
     // manually constructing table html heck yeah
     let html = '';
 
-    for(let i = 0; i < numRows; i++)
-    {
+    for (let i = 0; i < numRows; i++) {
         if (i == 0) {
             html += `<thead>\n`;
             html += "<tr>\n";
@@ -195,6 +206,31 @@ function populateDefaultDatasets() {
     }
 }
 
+function populateDefaultFeaturesets() {
+    let count = 0;
+    let html = "";
+
+    const classes = `class="col-md-3 m-1 btn btn-outline-primary builtins-cell"`
+    for (let features of default_featuresets) {
+        if (count == 0)
+            html += `<div class="row m-1 builtins-row">\n`;
+
+        html += `<a ${classes} id="${features}-features">${features}</a>\n`;
+
+        if (count == 2)
+            html += `</div>\n`;
+        count = (count + 1) % 3;
+    }
+    if (count != 0)
+        html += `</div>\n`;
+
+    $("#builtin-featuresets").html(html);
+
+    for (let features of default_featuresets) {
+        $(`#${features}-features`).click(() => loadFeatures(features));
+    }
+}
+
 let updateTitleAndDescription = (evt) => {
     $("#printonly-title").html(title.val());
     let parsed = converter.makeHtml(description.val());
@@ -220,7 +256,7 @@ let updatePrintTable = (evt) => {
 
         else {
             // skip rows that aren't selected
-            if (! $(`#include-row-${i}`).prop("checked"))
+            if (!$(`#include-row-${i}`).prop("checked"))
                 continue;
 
             count++;
@@ -230,7 +266,7 @@ let updatePrintTable = (evt) => {
 
         for (let j = 0; j < numCols; j++) {
             // skip cols that aren't selected
-            if (! $(`#include-col-${j + 1}`).prop("checked"))
+            if (!$(`#include-col-${j + 1}`).prop("checked"))
                 continue;
 
             let cellClass = "";
@@ -273,7 +309,7 @@ value: string; "+", "0", or "-"
 feature: int; index into featureset
 */
 let massSelectMatching = (select, value, feature) => {
-    if (! dataset || ! featureset)
+    if (!dataset || !featureset)
         return;
 
     let row = featureset[feature];
@@ -286,19 +322,19 @@ let massSelectMatching = (select, value, feature) => {
     }
 
     // select or unselect all matching entries
-    for(let i = 1; i < dataset.length; i++) {
+    for (let i = 1; i < dataset.length; i++) {
         let joined = "";
         for (const index in dataset[i]) {
             const word = dataset[i][index];
-            console.log(index, word, dataset[0][index]);
-            if (! isGloss(dataset[0][index]))
+            if (!isGloss(dataset[0][index]))
                 joined += word + ",";
         }
 
         matching.forEach((potentialMatch, index) => {
             if (joined.includes(potentialMatch)) {
                 $(`#include-row-${i}`).prop('checked', select);
-            }});
+            }
+        });
     }
 
     return null;
@@ -308,9 +344,8 @@ $(document).ready(() => {
     $("#select-control-buttons").hide();
 
     $.ajax({
-        "url" : `featuresets/default.csv`,
-        "success" : (res) => 
-        {
+        "url": `featuresets/default.csv`,
+        "success": (res) => {
             // default features
             featureset = $.csv.toArrays(res);
             populateFeatures(null);
@@ -318,6 +353,7 @@ $(document).ready(() => {
     });
 
     populateDefaultDatasets();
+    populateDefaultFeaturesets();
 
     // Set up listeners
     title.change(updateTitleAndDescription);
@@ -338,13 +374,12 @@ $(document).ready(() => {
 
     features_upload.change((ev) => {
         ev.preventDefault();
-
         let file = features_upload[0].files[0];
 
         if (file) {
             let reader = new FileReader();
             reader.readAsText(file, "UTF-8");
-            reader.onload = populateFeatures;
+            reader.onload = (evt) => populateFeatures(evt.target.result);
             reader.onerror = function (evt) { /* TODO */ }
         }
     });
